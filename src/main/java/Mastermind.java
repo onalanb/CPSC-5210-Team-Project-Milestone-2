@@ -334,6 +334,9 @@ public class Mastermind {
         return random.nextInt(0, this.possibilities);
     }
 
+    // Luoshan Zhang
+    // solutionIdToColorCode() was private previously and I changed it to
+    // default access to be able to unit test.
     /**
      * Given the number of colors and positions in a secret code, decode one of
      * those permutations, a solution number, into a string of letters
@@ -347,7 +350,7 @@ public class Mastermind {
      * @param solution one of many possible solutions
      * @return String representing this solution's color combination.
      */
-    private String solutionIdToColorCode(final int solution) {
+    String solutionIdToColorCode(final int solution) {
         StringBuilder secretCode = new StringBuilder();
         int pos = possibilities;
         int remainder = solution;

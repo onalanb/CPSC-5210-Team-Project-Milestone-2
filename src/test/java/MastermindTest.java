@@ -186,5 +186,26 @@ class MastermindTest {
         System.out.println(String.format("[EXPECTED] Black=%d White=%d\n[ACTUAL] Black=%d White=%d\n", numBlack, numWhite, actual.blacks(), actual.whites()));
     }
 
+    // Luoshan Zhang
+    // This test solutionIdToColorCodeRight() using parameterized tests with
+    // given valid id and check if the color code is decoded correctly
+    @ParameterizedTest(name = "solutionIdToColorCodeRight: solutionId={0} => " +
+            "colorCode= {1}")
+    @CsvSource({
+            "0, BB",
+            "1, BW",
+            "2, WB",
+            "3, WW",
+    })
+    void solutionIdToColorCodeRight(int solutionId, String expectedColorCode) {
+        String secretCode = "WB";
+
+        // Create Mastermind with RandomizerStub to using the giving secret code
+        IRandomizer randomizer = new RandomizerStub(secretCode);
+        Mastermind game = new Mastermind(2, 2, 1, 2, randomizer);
+
+        // Assert that the actual result is the same as expected.
+        assertTrue(expectedColorCode.equals(game.solutionIdToColorCode(solutionId)));
+    }
 }
 
