@@ -6,6 +6,8 @@
 // It generates random color codes every time it is run.
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
@@ -110,4 +112,79 @@ class MastermindTest {
         String actual = outContent.toString();
         assertEquals(expected, actual);
     }
+
+    // JOEN HO
+    // Parameterized tests for evaluateGuess function
+    // numBlack = number of colors in the correct position
+    // numWhite = number of colors present but not in the correct position
+    @ParameterizedTest(name = "evaluateGuess({0}, {1}, {2}, {3}, {4}, {5})")
+    @CsvSource({
+            // 0 position
+            "1, 0, B, B, 0, 0",
+            // 1 color, 1 position
+            "1, 1, B, B, 1, 0",
+            "1, 1, B, W, 0, 0",
+            // 1 color, 2 position
+            "1, 2, BB, BB, 2, 0",
+            "1, 2, BB, BW, 1, 0",
+            // 2 colors, 1 positions
+            "2, 1, B, B, 1, 0",
+            "2, 1, B, W, 0, 0",
+            "2, 1, B, BW, 1, 0",
+            "2, 1, B, WB, 0, 0",
+            // 2 colors, 2 positions
+            "2, 2, BW, BW, 2, 0",
+            "2, 2, BW, BB, 1, 0",
+            "2, 2, BW, WB, 0, 2",
+            // 2 colors, 3 positions
+            "2, 3, BWB, BWB, 3, 0",
+            "2, 3, BBB, BBW, 2, 0",
+            "2, 3, BWB, WBW, 0, 2",
+            // 3 colors, 3 positions
+            "3, 3, BWR, BWR, 3, 0",
+            "3, 3, BWR, RWB, 1, 2",
+            "3, 3, BWR, RBW, 0, 3",
+            "3, 3, BWR, GGG, 0, 0",
+            // 4 colors, 4 positions
+            "4, 4, BWRG, BWRG, 4, 0",
+            "4, 4, BWRG, BRGW, 1, 3",
+            "4, 4, BWRG, GRGR, 0, 2",
+            "4, 4, BWRG, OOOO, 0, 0",
+            // 5 colors, 5 positions
+            "5, 5, BWRGO, BWRGO, 5, 0",
+            "5, 5, BWRGO, BBBBB, 1, 0",
+            "5, 5, BWRGO, OGYYY, 0, 2",
+            "5, 5, BWRGO, YYYYY, 0, 0",
+            // 6 colors, 6 positions
+            "6, 6, BWRGOY, BWRGOY, 6, 0",
+            "6, 6, BWRGOY, YYYYYY, 1, 0",
+            "6, 6, BWRGOY, WBPPPP, 0, 2",
+            "6, 6, BWRGOY, PPPPPP, 0, 0",
+            // 7 colors, 7 positions
+            "7, 7, BWRGOYP, BWRGOYP, 7, 0",
+            "7, 7, BWRGOYP, RRRRRRR, 1, 0",
+            "7, 7, BWRGOYP, WBGROYP, 3, 4",
+            "7, 7, BWRGOYP, TTTTTTT, 0, 0",
+            // 8 colors, 8 positions
+            "8, 8, BWRGOYPT, BWRGOYPT, 8, 0",
+            "8, 8, BWRGOYPT, RRRRRRRR, 1, 0",
+            "8, 8, BWRGOYPT, TPYOGRWB, 0, 8",
+            "8, 8, BWRGOYPT, SSSSSSSS, 0, 0",
+            "9, 8, BWRGOYPT, SSSSSSSS, 0, 0",
+    })
+    @Test
+    void param_evaluateGuess(int numOfColors, int positions, String colorCode, String guess, int numBlack, int numWhite) {
+        // Declare randomizer stub for fixed param testing
+        RandomizerStub randStub = new RandomizerStub(colorCode);
+        // Create game instance
+        Mastermind game = new Mastermind(numOfColors, positions, 1, 1, randStub);
+        // evaluate the test inputs
+        Mastermind.Guess actual = game.evaluateGuess(0, guess, colorCode);
+        assertEquals(numBlack, actual.blacks());
+        assertEquals(numWhite, actual.whites());
+        // print the expected and actual output
+        System.out.println(String.format("[EXPECTED] Black=%d White=%d\n[ACTUAL] Black=%d White=%d", numBlack, numWhite, actual.blacks(), actual.whites()));
+    }
+
 }
+

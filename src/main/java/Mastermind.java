@@ -78,7 +78,9 @@ public class Mastermind {
      * position (blacks), and the number of colors present but not in the correct
      * position (whites.)
      */
-    private record Guess(int guessNum, String guess, int blacks, int whites){}
+    // JOEN HO
+    // Changed Guess to be package-private from private for testing purpose.
+    record Guess(int guessNum, String guess, int blacks, int whites){}
 
 
     private void play() {
@@ -261,8 +263,11 @@ public class Mastermind {
         }
     }
 
+    // JOEN HO
+    // evaluateGuess() was private previously.
+    // I made it to package-private access for test purpose.
     // tally black and white pegs
-    private Guess evaluateGuess(int guessNum, String guess, String secretCode) {
+    Guess evaluateGuess(int guessNum, String guess, String secretCode) {
         int blacks = 0, whites = 0;
         char[] g = guess.toCharArray();
         char[] sc = secretCode.toCharArray();
