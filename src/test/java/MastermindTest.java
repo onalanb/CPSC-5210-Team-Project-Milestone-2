@@ -172,7 +172,6 @@ class MastermindTest {
             "8, 8, BWRGOYPT, SSSSSSSS, 0, 0",
             "9, 8, BWRGOYPT, SSSSSSSS, 0, 0",
     })
-    @Test
     void param_evaluateGuess(int numOfColors, int positions, String colorCode, String guess, int numBlack, int numWhite) {
         // Declare randomizer stub for fixed param testing
         RandomizerStub randStub = new RandomizerStub(colorCode);
@@ -183,7 +182,8 @@ class MastermindTest {
         assertEquals(numBlack, actual.blacks());
         assertEquals(numWhite, actual.whites());
         // print the expected and actual output
-        System.out.println(String.format("[EXPECTED] Black=%d White=%d\n[ACTUAL] Black=%d White=%d", numBlack, numWhite, actual.blacks(), actual.whites()));
+        System.out.println(String.format("### TEST param_evaluateGuess(%d, %d, %s, %s, %d, %d) ###", numOfColors, positions, colorCode, guess, numBlack, numWhite));
+        System.out.println(String.format("[EXPECTED] Black=%d White=%d\n[ACTUAL] Black=%d White=%d\n", numBlack, numWhite, actual.blacks(), actual.whites()));
     }
 
 }
