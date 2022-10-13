@@ -297,7 +297,10 @@ public class Mastermind {
         return new Guess(guessNum, guess, blacks, whites);
     }
 
-    private boolean validateGuess(String guess) {
+    // Luoshan Zhang
+    // validateGuess() was private previously and I changed it to
+    // default access to be able to unit test.
+    boolean validateGuess(String guess) {
         return guess.length() == positions && guess.matches(guessValidatorRegex);
     }
 

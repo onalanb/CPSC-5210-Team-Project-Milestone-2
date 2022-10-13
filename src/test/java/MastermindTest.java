@@ -207,5 +207,27 @@ class MastermindTest {
         // Assert that the actual result is the same as expected.
         assertTrue(expectedColorCode.equals(game.solutionIdToColorCode(solutionId)));
     }
+
+    // This test validateGuess() using parameterized tests
+    @ParameterizedTest(name = "isGuessValid: guess={0} => isValid= {1}")
+    @CsvSource({
+            "BB, true",    // valid value with valid length
+            "BW, true",
+            "WB, true",
+            "WW, true",
+            "BBBB, false", // valid color, but length is greater than position
+            "B, false",    // valid color, but length is less than position
+            "AA, false",   // valid length, invalid color
+    })
+    void validateGuess(String guess, boolean expectedValidateGuess) {
+        String secretCode = "WB";
+
+        // Create Mastermind with RandomizerStub to using the giving secret code
+        IRandomizer randomizer = new RandomizerStub(secretCode);
+        Mastermind game = new Mastermind(2, 2, 1, 2, randomizer);
+
+        // Assert that the actual result is the same as expected.
+        assertTrue(expectedValidateGuess == game.validateGuess(guess));
+    }
 }
 
