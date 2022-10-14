@@ -62,6 +62,7 @@ class MastermindTest {
                 "\r\n";
         // Assert that the actual output is the same as expected.
         String actual = outContent.toString();
+        System.out.println("Human Turn Guess Right Passed.");
         assertEquals(expected, actual);
     }
 
@@ -110,6 +111,7 @@ class MastermindTest {
                 "THE ACTUAL COMBINATION WAS: GRBW\r\n";
         // Assert that the actual output is the same as expected.
         String actual = outContent.toString();
+        System.out.println("Human Turn Guess Wrong Passed.");
         assertEquals(expected, actual);
     }
 
