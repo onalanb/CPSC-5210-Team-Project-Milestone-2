@@ -5,12 +5,15 @@
 // This is the actual implementation of IRandomizer that the Mastermind game uses.
 // It generates random color codes every time it is run.
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -230,6 +233,166 @@ class MastermindTest {
 
         // Assert that the actual result is the same as expected.
         assertTrue(expectedValidateGuess == game.validateGuess(guess));
+    }
+
+    // JOEN HO
+    // This is parameterized tests for getMaxPositions function
+    @ParameterizedTest(name = "param_getMaxPositionsTest: numOfColors={0} => expected= {1}")
+    @CsvSource({
+            "2147483647, 1",
+            "1, 2147483647",
+            "2, 30",
+            "3, 19",
+            "4, 15",
+            "5, 13",
+            "6, 11",
+            "7, 11",
+            "8, 10",
+    })
+    void param_getMaxPositionsTest(int numOfColors, int expected) {
+        assertEquals(expected, Mastermind.getMaxPositions(numOfColors));
+    }
+
+    // JOEN HO
+    // This is unit test for printGuess function.
+    @Test
+    void printGuessTest() {
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+        // Declare randomizer stub for fixed param testing
+        RandomizerStub randStub = new RandomizerStub("BWW");
+        // Create game instance
+        Mastermind game = new Mastermind(2, 3, 1, 1, randStub);
+        Mastermind.Guess guess = new Mastermind.Guess(1, "BBW",2, 1);
+        // call printGuess
+        game.printGuess(guess);
+        String expected = "TOTAL POSSIBILITIES = 8\n" +
+                "\n" +
+                "\n" +
+                "COLOR     LETTER\n" +
+                "=====     ======\n" +
+                "BLACK        B\n" +
+                "WHITE        W\n" +
+                "\n" +
+                "\n" +
+                "  1      BBW              2         1\n";
+        String actual = outContent.toString();
+        // compare expected and actual output
+        assertEquals(expected, actual);
+    }
+
+    // JOEN HO
+    @Test
+    void displayBoardTest() {
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+        // Declare randomizer stub for fixed param testing
+        RandomizerStub randStub = new RandomizerStub("BWW");
+        // Create game instance
+        Mastermind game = new Mastermind(2, 3, 1, 1, randStub);
+        // Add guesses
+        game.guesses.add(new Mastermind.Guess(1, "WBW",1, 2));
+        game.guesses.add(new Mastermind.Guess(1, "BBW",2, 1));
+        // call printGuess
+        game.displayBoard();
+        // set expected
+        String expected = "TOTAL POSSIBILITIES = 8\n" +
+                "\n" +
+                "\n" +
+                "COLOR     LETTER\n" +
+                "=====     ======\n" +
+                "BLACK        B\n" +
+                "WHITE        W\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "BOARD\n" +
+                "MOVE     GUESS          BLACK     WHITE\n" +
+                "  1      WBW              1         2\n" +
+                "  1      BBW              2         1\n" +
+                "\n";
+        String actual = outContent.toString();
+        // compare expected and actual output
+        assertEquals(expected, actual);
+    }
+
+    // JOEN HO
+    // This is parameterized tests for displayColorCodesTest function
+    @ParameterizedTest(name = "param_displayColorCodesTest: numOfColors={0}")
+    @CsvSource({
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+    })
+    void param_displayColorCodesTest(int numOfColors) {
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+        // Create expected output
+        String expected = "\n\nCOLOR     LETTER\n=====     ======\n";
+        String colors = "";
+        int count = 0;
+        for (Color c : Color.values()) {
+            colors += c.name + " ".repeat(13 - c.name.length()) + c + "\n";
+            count += 1;
+            if (numOfColors == count) {
+                break;
+            }
+        }
+        expected += colors + "\n\n";
+        // call displayColorCodes
+        Mastermind.displayColorCodes(numOfColors);
+        String actual = outContent.toString();
+        // compare expected and actual output
+        assertEquals(expected, actual);
+    }
+
+    // JOEN HO
+    // This is unit test for title function.
+    @Test
+    void titleTest() {
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+        String expected = "                              MASTERMIND\n" +
+                "               CREATIVE COMPUTING  MORRISTOWN, NEW JERSEY%n%n%n\n\n";
+        // call title
+        Mastermind.title();
+        String actual = outContent.toString();
+        // compare expected and actual output
+        assertEquals(expected, actual);
+    }
+
+    // JOEN HO
+    // This is parameterized tests for getPegCountTest function
+    @ParameterizedTest(name = "param_getPegCountTest: upperBound={0}, userInput={1}")
+    @CsvSource({
+            "5, 0 0",
+            "5, 1 1",
+            "5, 5 5",
+            "5, 4 4",
+    })
+    void param_getPegCountTest(int upperBound, String userInput){
+        // Set user input to input stream
+        System.setIn(new ByteArrayInputStream(userInput.getBytes()));
+        // set expected
+        int[] nums = {Integer.MAX_VALUE, Integer.MAX_VALUE};
+        String[] numbers = userInput.split("[\\s,]+");
+        nums[0] = Integer.parseInt(numbers[0].trim());
+        nums[1] = Integer.parseInt(numbers[1].trim());
+
+        // call getPegCount
+        int[] ret = Mastermind.getPegCount(upperBound);
+        // compare expected and actual output
+        assertEquals(nums[0], ret[0]);
+        assertEquals(nums[1], ret[1]);
     }
 }
 
