@@ -121,7 +121,9 @@ public class Mastermind {
      * @param numOfColors  number of different colors
      * @return             max number of positions in the secret code.
      */
-    private static int getMaxPositions(int numOfColors){
+    // JOEN HO
+    // I got rid of private modifier for testing purpose.
+    static int getMaxPositions(int numOfColors){
         return (int)(Math.log(Integer.MAX_VALUE)/Math.log(numOfColors));
     }
 
@@ -309,11 +311,15 @@ public class Mastermind {
                 .formatted(computerMoves, humanMoves);
     }
 
-    private void printGuess(Guess g){
+    // JOEN HO
+    // I got rid of private modifier for testing purpose.
+    void printGuess(Guess g){
         pf("% 3d%9s% 15d% 10d%n",g.guessNum(),g.guess(),g.blacks(),g.whites());
     }
 
-    private void displayBoard() {
+    // JOEN HO
+    // I got rid of private modifier for testing purpose.
+    void displayBoard() {
         pl();
         pl("BOARD");
         pl("MOVE     GUESS          BLACK     WHITE");
@@ -366,7 +372,9 @@ public class Mastermind {
         return secretCode.toString();
     }
 
-    private static void displayColorCodes(int numOfColors) {
+    // JOEN HO
+    // I got rid of private modifier for testing purpose.
+    static void displayColorCodes(int numOfColors) {
         pl("\n\nCOLOR     LETTER\n=====     ======");
         Arrays.stream(Color.values())
                 .limit(numOfColors)
@@ -375,7 +383,9 @@ public class Mastermind {
         pl();pl();
     }
 
-    private static void title() {
+    // JOEN HO
+    // I got rid of private modifier for testing purpose.
+    static void title() {
         pl("""    
                                   MASTERMIND
                    CREATIVE COMPUTING  MORRISTOWN, NEW JERSEY%n%n%n
@@ -449,7 +459,9 @@ public class Mastermind {
                 num -> num > 0 && num <= to);
     }
 
-    private static int[] getPegCount(int upperBound) {
+    // JOEN HO
+    // I got rid of private modifier for testing purpose.
+    static int[] getPegCount(int upperBound) {
         int[] nums = {Integer.MAX_VALUE, Integer.MAX_VALUE};
         while (true) {
             String input = getInput(
