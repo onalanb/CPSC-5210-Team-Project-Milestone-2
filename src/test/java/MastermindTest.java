@@ -5,7 +5,6 @@
 // This is the actual implementation of IRandomizer that the Mastermind game uses.
 // It generates random color codes every time it is run.
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
