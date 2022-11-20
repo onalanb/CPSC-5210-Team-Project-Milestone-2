@@ -401,7 +401,7 @@ public class Mastermind {
     // Returns true if user inputs are being mocked, which is going
     // to be the case while unit testing.
     private static boolean inUnitTesting() {
-        return inputs == null;
+        return inputs != null;
     }
 
     /**
@@ -426,7 +426,7 @@ public class Mastermind {
         // Inputs will be a non-null queue when the unit tests are running. We use
         // the input sequence in the queue replacing any user inputs if so.
         Scanner scanner;
-        if (inUnitTesting()) {
+        if (!inUnitTesting()) {
             scanner = new Scanner(System.in);
         } else {
             String input = inputs.remove();
@@ -449,7 +449,7 @@ public class Mastermind {
                     // if we are here then the input has been closed, or we received an
                     // EOF (end of file) signal, usually in the form of a ctrl-d or
                     // in the case of Windows, a ctrl-z.
-                    if (inUnitTesting()) {
+                    if (!inUnitTesting()) {
                         // Exit only if we are not running the unit tests.
                         pl("END OF INPUT, STOPPING PROGRAM.");
                         System.exit(1);
