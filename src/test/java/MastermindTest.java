@@ -11,10 +11,19 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
+import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MastermindTest {
+
+    // BARAN ONALAN
+    // Before each test set input, so it is not null. Otherwise, SUT can execute
+    // system.exit which will exit the UT as well.
+    @BeforeEach
+    void setUp() {
+        Mastermind.setInputs(new LinkedList<>());
+    }
 
     // BARAN ONALAN
     // This test the humanTurn() unit with the scenario of a correct guess within
