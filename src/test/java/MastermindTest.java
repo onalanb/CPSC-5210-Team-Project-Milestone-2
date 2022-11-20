@@ -8,11 +8,9 @@
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
-import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,27 +41,27 @@ class MastermindTest {
         game.humanTurn();
 
         // The expected output should contain lines for both incorrect and correct guesses.
-        String expected = "TOTAL POSSIBILITIES = 256\r\n" +
+        String expected = "TOTAL POSSIBILITIES = 256\n" +
                 "\n" +
                 "\n" +
                 "COLOR     LETTER\n" +
-                "=====     ======\r\n" +
-                "BLACK        B\r\n" +
-                "WHITE        W\r\n" +
-                "RED          R\r\n" +
-                "GREEN        G\r\n" +
-                "\r\n" +
-                "\r\n" +
+                "=====     ======\n" +
+                "BLACK        B\n" +
+                "WHITE        W\n" +
+                "RED          R\n" +
+                "GREEN        G\n" +
+                "\n" +
+                "\n" +
                 "GUESS MY COMBINATION. \n" +
-                "\r\n" +
-                "MOVE #1 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\r\n" +
-                "MOVE #2 GUESS ?YOU GUESSED IT IN 2 MOVES!\r\n" +
-                "SCORE:\r\n" +
-                "\tCOMPUTER \t0\r\n" +
-                "\tHUMAN \t2\r\n" +
-                "\r\n";
+                "\n" +
+                "MOVE #1 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\n" +
+                "MOVE #2 GUESS ?YOU GUESSED IT IN 2 MOVES!\n" +
+                "SCORE:\n" +
+                "\tCOMPUTER \t0\n" +
+                "\tHUMAN \t2\n" +
+                "\n";
         // Assert that the actual output is the same as expected.
-        String actual = outContent.toString();
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
         System.out.println("Human Turn Guess Right Passed.");
         assertEquals(expected, actual);
     }
@@ -94,25 +92,25 @@ class MastermindTest {
 
         // The expected output should contain lines for all incorrect guesses
         // and that we ran out of moves.
-        String expected = "TOTAL POSSIBILITIES = 256\r\n" +
+        String expected = "TOTAL POSSIBILITIES = 256\n" +
                 "\n" +
                 "\n" +
                 "COLOR     LETTER\n" +
-                "=====     ======\r\n" +
-                "BLACK        B\r\n" +
-                "WHITE        W\r\n" +
-                "RED          R\r\n" +
-                "GREEN        G\r\n" +
-                "\r\n" +
-                "\r\n" +
+                "=====     ======\n" +
+                "BLACK        B\n" +
+                "WHITE        W\n" +
+                "RED          R\n" +
+                "GREEN        G\n" +
+                "\n" +
+                "\n" +
                 "GUESS MY COMBINATION. \n" +
-                "\r\n" +
-                "MOVE #1 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\r\n" +
-                "MOVE #2 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\r\n" +
-                "YOU RAN OUT OF MOVES!  THAT'S ALL YOU GET!\r\n" +
-                "THE ACTUAL COMBINATION WAS: GRBW\r\n";
+                "\n" +
+                "MOVE #1 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\n" +
+                "MOVE #2 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\n" +
+                "YOU RAN OUT OF MOVES!  THAT'S ALL YOU GET!\n" +
+                "THE ACTUAL COMBINATION WAS: GRBW\n";
         // Assert that the actual output is the same as expected.
-        String actual = outContent.toString();
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
         System.out.println("Human Turn Guess Wrong Passed.");
         assertEquals(expected, actual);
     }
@@ -276,7 +274,7 @@ class MastermindTest {
                 "\n" +
                 "\n" +
                 "  1      BBW              2         1\n";
-        String actual = outContent.toString();
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
         // compare expected and actual output
         assertEquals(expected, actual);
     }
@@ -312,7 +310,7 @@ class MastermindTest {
                 "  1      WBW              1         2\n" +
                 "  1      BBW              2         1\n" +
                 "\n";
-        String actual = outContent.toString();
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
         // compare expected and actual output
         assertEquals(expected, actual);
     }
@@ -348,7 +346,7 @@ class MastermindTest {
         expected += colors + "\n\n";
         // call displayColorCodes
         Mastermind.displayColorCodes(numOfColors);
-        String actual = outContent.toString();
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
         // compare expected and actual output
         assertEquals(expected, actual);
     }
@@ -364,7 +362,7 @@ class MastermindTest {
                 "               CREATIVE COMPUTING  MORRISTOWN, NEW JERSEY%n%n%n\n\n";
         // call title
         Mastermind.title();
-        String actual = outContent.toString();
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
         // compare expected and actual output
         assertEquals(expected, actual);
     }
@@ -380,7 +378,10 @@ class MastermindTest {
     })
     void param_getPegCountTest(int upperBound, String userInput){
         // Set user input to input stream
-        System.setIn(new ByteArrayInputStream(userInput.getBytes()));
+        LinkedList<String> userInputs = new LinkedList<>();
+        userInputs.add(userInput);
+        Mastermind.setInputs(userInputs);
+
         // set expected
         int[] nums = {Integer.MAX_VALUE, Integer.MAX_VALUE};
         String[] numbers = userInput.split("[\\s,]+");
@@ -393,5 +394,112 @@ class MastermindTest {
         assertEquals(nums[0], ret[0]);
         assertEquals(nums[1], ret[1]);
     }
-}
 
+    // BARAN ONALAN
+    // This is a parameterized test for the getPositiveNumber function
+    @ParameterizedTest(name = "param_getPositiveNumberTest: userInput={0}")
+    @CsvSource({
+            "5",
+            "3",
+            "0",
+            "-5",
+            "hello",
+    })
+    void param_getPositiveNumberTest(String userInput) {
+        // Set user input to input stream.
+        LinkedList<String> userInputs = new LinkedList<>();
+        userInputs.add(userInput);
+        Mastermind.setInputs(userInputs);
+
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+
+        // Call getPositiveNumber
+        int actual = Mastermind.getPositiveNumber();
+
+        // Set the expected output
+        int expected = 0;
+        boolean isError = false;
+        try {
+            expected = Integer.parseInt(userInput);
+            if (expected < 1) {
+                isError = true;
+            }
+        } catch (NumberFormatException invalidInput) {
+            isError = true;
+        }
+
+        // Compare actual to expected
+        if (!isError) {
+            assertEquals(expected, actual);
+        } else {
+            String actualWhenError = outContent.toString().replaceAll("\\r\\n?", "\n");
+            String expectedWhenError = "!NUMBER EXPECTED - RETRY INPUT LINE\n? ";
+            assertEquals(expectedWhenError, actualWhenError);
+        }
+    }
+
+    // BARAN ONALAN
+    // This is a parameterized test for the getPositiveNumberUpTo function
+    @ParameterizedTest(name = "param_getPositiveNumberUpToTest: upperBound = {0}, userInput={1}")
+    @CsvSource({
+            "10,5",
+            "10,15",
+            "10,10",
+            "10,0",
+            "10,-5",
+            "10,hello",
+    })
+    void param_getPositiveNumberUpToTest(long upperBound, String userInput) {
+        // Set user input to input stream.
+        LinkedList<String> userInputs = new LinkedList<>();
+        userInputs.add(userInput);
+        Mastermind.setInputs(userInputs);
+
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+
+        // Call getPositiveNumberUpTo
+        int actual = Mastermind.getPositiveNumberUpTo(upperBound);
+
+        // Set the expected output
+        int expected = 0;
+        boolean isError = false;
+        try {
+            expected = Integer.parseInt(userInput);
+            if (expected < 1 || expected > upperBound) {
+                isError = true;
+            }
+        } catch (NumberFormatException invalidInput) {
+            isError = true;
+        }
+
+        // Compare actual to expected
+        if (!isError) {
+            assertEquals(expected, actual);
+        } else {
+            String actualWhenError = outContent.toString().replaceAll("\\r\\n?", "\n");
+            String expectedWhenError = "!NUMBER FROM 1 TO 10 EXPECTED - RETRY INPUT LINE\n? ";
+            assertEquals(expectedWhenError, actualWhenError);
+        }
+    }
+
+    // BARAN ONALAN
+    // Unit test to verify the quit function.
+    @Test
+    void quitTest() {
+        Mastermind test = new Mastermind(4, 4, 1, 10);
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+        // Call quit
+        test.quit("RGBB");
+
+        // Compare actual to expected
+        String normalizedOutContent = outContent.toString().replaceAll("\\r\\n?", "\n");
+        assertEquals("QUITTER!  MY COMBINATION WAS: RGBB\nGOOD BYE\n", normalizedOutContent);
+    }
+
+}
