@@ -378,30 +378,53 @@ class MastermindTest {
 
     // JOEN HO
     // This is parameterized tests for getPegCountTest function
-    @ParameterizedTest(name = "param_getPegCountTest: upperBound={0}, userInput={1}")
+    @ParameterizedTest(name = "param_getPegCountTest: upperBound={0}, userInput={1}, userInput2={2}")
     @CsvSource({
-            "5, 0 0",
-            "5, 1 1",
-            "5, 5 5",
-            "5, 4 4",
+            "5, 0 0,",
+            "5, 1 1,",
+            "5, 5 5,",
+            "5, 4 4,",
+            "5, 6 6, 2 2",
     })
-    void param_getPegCountTest(int upperBound, String userInput){
+    void param_getPegCountTest(int upperBound, String userInput, String userInput2){
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+
         // Set user input to input stream
         LinkedList<String> userInputs = new LinkedList<>();
         userInputs.add(userInput);
+        if(userInput2 != null){
+            userInputs.add(userInput2);
+        }
         Mastermind.setInputs(userInputs);
 
         // set expected
         int[] nums = {Integer.MAX_VALUE, Integer.MAX_VALUE};
-        String[] numbers = userInput.split("[\\s,]+");
-        nums[0] = Integer.parseInt(numbers[0].trim());
-        nums[1] = Integer.parseInt(numbers[1].trim());
+        if(userInput2 == null) {
+            String[] numbers = userInput.split("[\\s,]+");
+            nums[0] = Integer.parseInt(numbers[0].trim());
+            nums[1] = Integer.parseInt(numbers[1].trim());
+        }else{
+            String[] numbers = userInput2.split("[\\s,]+");
+            nums[0] = Integer.parseInt(numbers[0].trim());
+            nums[1] = Integer.parseInt(numbers[1].trim());
+        }
 
         // call getPegCount
         int[] ret = Mastermind.getPegCount(upperBound);
-        // compare expected and actual output
-        assertEquals(nums[0], ret[0]);
-        assertEquals(nums[1], ret[1]);
+
+        if(nums[0] >= 0 && nums[0] <= upperBound || nums[1] >= 0 && nums[1] <= upperBound) {
+            // compare expected and actual output
+            assertEquals(nums[0], ret[0]);
+            assertEquals(nums[1], ret[1]);
+        } else {
+            // set expected
+            String expected = "NUMBERS MUST BE FROM 0 TO " + Integer.toString(upperBound) + ".";
+            String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
+            // compare expected and actual output
+            assertEquals(expected, actual);
+        }
     }
 
     // BARAN ONALAN
