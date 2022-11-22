@@ -563,25 +563,25 @@ class MastermindTest {
         IRandomizer randomizer = new RandomizerStub(secretCode);
         Mastermind game = new Mastermind(2, 2, 1, 2, randomizer);
 
-        // Expected result before guessing
-        String expected = "SCORE:\n\tCOMPUTER \t0\n\tHUMAN \t0\n";
-        // Assert that the actual result is the same as expected.
-        assertEquals(expected, game.getScore());
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
 
         // Simulate user input for one correct guesses.
         LinkedList<String> guesses = new LinkedList<>();
         guesses.add("WB");
         Mastermind.setInputs(guesses);
 
-        // Redirect the output so we can compare it against the expected.
-        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-        Mastermind.setOut(new PrintStream(outContent));
-
-        // Human score is increased after one correct guess
+        // Human score is increased one after one correct guess
         game.humanTurn();
-        String expectedOutput = "SCORE:\n\tCOMPUTER \t0\n\tHUMAN \t1\n";
+        String expected = "GUESS MY COMBINATION. \n\n" +
+                "MOVE #1 GUESS ?YOU GUESSED IT IN 1 MOVES!\n" +
+                "SCORE:\n" +
+                "\tCOMPUTER \t0\n" +
+                "\tHUMAN \t1\n\n";
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
         // Assert that the actual result is the same as expected.
-        assertEquals(expectedOutput, game.getScore());
+        assertEquals(expected, actual);
     }
 
     // Luoshan Zhang
