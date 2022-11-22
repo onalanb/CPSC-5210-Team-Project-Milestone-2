@@ -534,4 +534,86 @@ class MastermindTest {
         assertEquals("QUITTER!  MY COMBINATION WAS: RGBB\nGOOD BYE\n", normalizedOutContent);
     }
 
+    // Luoshan Zhang
+    // This parameterized test is to check get user input as string
+    @ParameterizedTest(name = "getWord: userInput={0} => expected= {1}")
+    @CsvSource({
+            "BW, BW",
+            "BOARD, BOARD",
+            "QUIT, QUIT",
+            "123, 123",
+            "%#, %#",
+    })
+    void getWordTest(String userInput, String expected) {
+        // Set user input to input stream.
+        LinkedList<String> userInputs = new LinkedList<>();
+        userInputs.add(userInput);
+        Mastermind.setInputs(userInputs);
+
+        // Assert that the actual result is the same as expected.
+        assertEquals(expected, Mastermind.getWord());
+    }
+
+    // Luoshan Zhang
+    // This test is to check get score function
+    @Test
+    void getScoreTest() {
+        // Create Mastermind with RandomizerStub to using the giving secret code
+        String secretCode = "WB";
+        IRandomizer randomizer = new RandomizerStub(secretCode);
+        Mastermind game = new Mastermind(2, 2, 1, 2, randomizer);
+
+        // Expected result before guessing
+        String expected = "SCORE:\n\tCOMPUTER \t0\n\tHUMAN \t0\n";
+        // Assert that the actual result is the same as expected.
+        assertEquals(expected, game.getScore());
+
+        // Simulate user input for one correct guesses.
+        LinkedList<String> guesses = new LinkedList<>();
+        guesses.add("WB");
+        Mastermind.setInputs(guesses);
+
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+
+        // Human score is increased after one correct guess
+        game.humanTurn();
+        String expectedOutput = "SCORE:\n\tCOMPUTER \t0\n\tHUMAN \t1\n";
+        // Assert that the actual result is the same as expected.
+        assertEquals(expectedOutput, game.getScore());
+    }
+
+    // Luoshan Zhang
+    // This test is to check setup function
+    @Test
+    void setupTest() {
+        // Simulate user input for setup
+        LinkedList<String> inputs = new LinkedList<>();
+        inputs.add("2");
+        inputs.add("2");
+        inputs.add("1");
+        inputs.add("2");
+        Mastermind.setInputs(inputs);
+
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+
+        // Call the testing function
+        Mastermind game = Mastermind.setup();
+
+        // The expected output after setup
+        String expected = "NUMBER OF COLORS? > NUMBER OF POSITIONS (MAX 30)" +
+                "? > NUMBER OF ROUNDS? > ON YOUR TURN YOU CAN ENTER " +
+                "'BOARD' TO DISPLAY YOUR PREVIOUS GUESSES,\nOR 'QUIT' TO GIVE" +
+                " UP.\nTOTAL POSSIBILITIES = 4\n\n\n" +
+                "COLOR     LETTER\n" +
+                "=====     ======\n" +
+                "BLACK        B\n" +
+                "WHITE        W\n\n\n";
+        // Assert that the actual output is the same as expected.
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
+        assertEquals(expected, actual);
+    }
 }

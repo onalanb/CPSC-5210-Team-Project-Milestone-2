@@ -94,7 +94,7 @@ public class Mastermind {
      * Builder-ish pattern for creating Mastermind game
      * @return Mastermind game object
      */
-    private static Mastermind setup() {
+    static Mastermind setup() {
         int numOfColors;
         pf("NUMBER OF COLORS? > ");
         numOfColors = getPositiveNumberUpTo(Color.values().length);
@@ -306,7 +306,7 @@ public class Mastermind {
         return guess.length() == positions && guess.matches(guessValidatorRegex);
     }
 
-    private String getScore() {
+    String getScore() {
         return "SCORE:%n\tCOMPUTER \t%d%n\tHUMAN \t%d%n"
                 .formatted(computerMoves, humanMoves);
     }
@@ -496,7 +496,7 @@ public class Mastermind {
         }
     }
 
-    private static String getWord() {
+    static String getWord() {
         return getInput("WORD", Scanner::next, word -> !"".equals(word));
     }
 }
