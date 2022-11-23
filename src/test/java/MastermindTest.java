@@ -121,6 +121,52 @@ class MastermindTest {
         String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
         assertEquals(expected, actual);
     }
+    
+    @Test
+    void computerTurnTestValidHumanInfo()
+    {
+        LinkedList<String> humanResponse = new LinkedList<>();
+        humanResponse.add("\n");
+        humanResponse.add("0 1");
+        humanResponse.add("2 0");
+        Mastermind.setInputs(humanResponse);
+
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+
+        // Value for Computer to guess
+        //String cCode = "BB";
+        int solution = 0;
+
+
+        IRandomizer randomizer = new IDStub(solution);
+        // Max retries is 10.
+        Mastermind game = new Mastermind(2, 2, 1, 4, randomizer);
+
+        System.out.println("Test before ComputerTurn");
+
+        game.computerTurn();
+
+        // 1 0
+        // 2 0
+        String expected =
+                "NOW I GUESS. THINK OF A COMBINATION. \n" +
+                "HIT RETURN WHEN READY: \n" +
+                "\n" +
+                //"MY GUESS IS: BW BLACKS, WHITES ?\n" +
+                "MY GUESS IS: BB BLACKS, WHITES ?\n" +
+                "I GOT IT IN 1 MOVES! \n" +
+                "SCORE:\n" +
+                "\tCOMPUTER \t1\n" +
+                "\tHUMAN \t2\n" +
+                "\n";
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
+
+        System.out.println(actual);
+
+        assertEquals(expected, actual);
+    }
 
     // JOEN HO
     // Parameterized tests for evaluateGuess function
@@ -192,6 +238,23 @@ class MastermindTest {
         assertEquals(numWhite, actual.whites());
     }
 
+    // Julie Mammen
+    // Utilized a test double in order to mock an expected value
+    // due to the random behavior of generateSolutionID();
+    @ParameterizedTest(name = "generateSolutionIDCorrect: solution={0} => ")
+    @CsvSource({
+            "0",
+            "1",
+            "2",
+            "3"
+    })
+    void generateSolutionIDCorrect(int expectedSolution)
+    {
+        // Create Mastermind with the randomizer stub, used to mock the generateSolutionId()
+        IRandomizer randomizer = new IDStub(expectedSolution);
+        Mastermind game = new Mastermind(2, 2, 1, 2, randomizer);
+        assertEquals(expectedSolution ,randomizer.generateID());
+    }
     // Luoshan Zhang
     // This test solutionIdToColorCodeRight() using parameterized tests with
     // given valid id and check if the color code is decoded correctly
