@@ -19,5 +19,10 @@ public class RandomizerStub implements IRandomizer {
     public String generateColorCode() {
         return colorCode;
     }
+    
+    @Override
+    public int generateID() {
+        return 0;
+    }
 
 }
