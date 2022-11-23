@@ -71,7 +71,6 @@ class MastermindTest {
                 "\n";
         // Assert that the actual output is the same as expected.
         String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
-        System.out.println("Human Turn Guess Right Passed.");
         assertEquals(expected, actual);
     }
 
@@ -120,7 +119,6 @@ class MastermindTest {
                 "THE ACTUAL COMBINATION WAS: GRBW\n";
         // Assert that the actual output is the same as expected.
         String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
-        System.out.println("Human Turn Guess Wrong Passed.");
         assertEquals(expected, actual);
     }
 
@@ -192,9 +190,6 @@ class MastermindTest {
         Mastermind.Guess actual = game.evaluateGuess(0, guess, colorCode);
         assertEquals(numBlack, actual.blacks());
         assertEquals(numWhite, actual.whites());
-        // print the expected and actual output
-        System.out.println(String.format("### TEST param_evaluateGuess(%d, %d, %s, %s, %d, %d) ###", numOfColors, positions, colorCode, guess, numBlack, numWhite));
-        System.out.println(String.format("[EXPECTED] Black=%d White=%d\n[ACTUAL] Black=%d White=%d\n", numBlack, numWhite, actual.blacks(), actual.whites()));
     }
 
     // Luoshan Zhang
