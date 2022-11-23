@@ -1,0 +1,18 @@
+public class IDStub implements IRandomizer {
+    private int solutionNum;
+    private String colorCode;
+
+    public IDStub(int solutionNum) {
+        this.solutionNum = solutionNum;
+    }
+
+    @Override
+    public String generateColorCode() {
+        return null;
+    }
+
+    @Override
+    public int generateID() {
+        return solutionNum;
+    }
+}
