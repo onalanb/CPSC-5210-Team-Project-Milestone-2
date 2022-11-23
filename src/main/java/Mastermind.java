@@ -218,7 +218,7 @@ public class Mastermind {
         }
     }
 
-    private void computerTurn(){
+    void computerTurn() {
         while (true) {
             pl("NOW I GUESS.  THINK OF A COMBINATION.");
             pl("HIT RETURN WHEN READY:");
@@ -342,7 +342,7 @@ public class Mastermind {
      * @return one of many possible solutions
      */
     private int generateSolutionID() {
-        return random.nextInt(0, this.possibilities);
+        return randomizer.generateSolutionID();
     }
 
     // Luoshan Zhang

@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.LinkedList;
+
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -117,6 +118,56 @@ class MastermindTest {
                 "MOVE #2 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\n" +
                 "YOU RAN OUT OF MOVES!  THAT'S ALL YOU GET!\n" +
                 "THE ACTUAL COMBINATION WAS: GRBW\n";
+        // Assert that the actual output is the same as expected.
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
+        assertEquals(expected, actual);
+    }
+
+    // BARAN ONALAN
+    // This test the computerTurn() unit with the scenario of all human input being valid.
+    @Test
+    void computerTurnTestValidHumanInput() {
+        // We provide user input for two incorrect and one correct guesses from the computer.
+        // Human secret code here is "WB"
+        LinkedList<String> userInputs = new LinkedList<>();
+        userInputs.add("\n");
+        userInputs.add("1 0\n");
+        userInputs.add("0 2\n");
+        userInputs.add("2 0\n");
+        Mastermind.setInputs(userInputs);
+
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+
+        // The correct secret code is this.
+        LinkedList<Integer> computerInputs = new LinkedList<Integer>();
+        computerInputs.add(3);  // WW
+        computerInputs.add(1);  // BW
+        computerInputs.add(2);  // WB
+        IRandomizer randomizer = new RandomizerStub(computerInputs);
+        // Max retries is 10.
+        Mastermind game = new Mastermind(2, 2, 1, 3, randomizer);
+
+        // Call the method that we are testing.
+        game.computerTurn();
+
+        String expected = "TOTAL POSSIBILITIES = 4\n" +
+                "\n" +
+                "\n" +
+                "COLOR     LETTER\n" +
+                "=====     ======\n" +
+                "BLACK        B\n" +
+                "WHITE        W\n" +
+                "\n" +
+                "\n" +
+                "NOW I GUESS.  THINK OF A COMBINATION.\n" +
+                "HIT RETURN WHEN READY:\n" +
+                "MY GUESS IS: WW  BLACKS, WHITES ? " +
+                "MY GUESS IS: BW  BLACKS, WHITES ? " +
+                "MY GUESS IS: WB  BLACKS, WHITES ? " +
+                "I GOT IT IN  3 MOVES!\n";
+
         // Assert that the actual output is the same as expected.
         String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
         assertEquals(expected, actual);

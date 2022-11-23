@@ -7,12 +7,21 @@
 // This is the mock/stub implementation of IRandomizer that the Mastermind
 // unit tests use. It returns whatever fixed color codes our tests need it to return.
 
+import java.util.Queue;
+
 public class RandomizerStub implements IRandomizer {
 
     private String colorCode;
+    private Queue<Integer> solutionIDs;
 
+    // This constructor gets used when testing the human turn.
     public RandomizerStub(String colorCode) {
         this.colorCode = colorCode;
+    }
+
+    // This constructor gets used when testing the computer turn.
+    public RandomizerStub(Queue<Integer> solutionIDs) {
+        this.solutionIDs = solutionIDs;
     }
 
     @Override
@@ -20,4 +29,8 @@ public class RandomizerStub implements IRandomizer {
         return colorCode;
     }
 
+    @Override
+    public int generateSolutionID() {
+        return solutionIDs.remove();
+    }
 }

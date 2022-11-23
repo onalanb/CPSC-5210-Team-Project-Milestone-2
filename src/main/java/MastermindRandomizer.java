@@ -36,7 +36,8 @@ public class MastermindRandomizer implements IRandomizer {
      *
      * @return one of many possible solutions
      */
-    private int generateSolutionID() {
+    @Override
+    public int generateSolutionID() {
         return random.nextInt(0, this.possibilities);
     }
 
