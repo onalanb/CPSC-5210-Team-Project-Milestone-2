@@ -166,6 +166,86 @@ class MastermindTest {
         String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
         assertEquals(expected, actual);
     }
+    
+    // Julie Mammen
+    // This test only playRound() to ensure proper functionality
+    // of the singular function. It simulates one round
+    // of the game to ensure that game round plays
+    // as should.
+    @Test
+    void playRoundTest()
+    {
+        Mastermind.demoMode = false;
+
+        LinkedList<String> userInputs = new LinkedList<>();
+        // Human Turn - Round 1
+        // We provide input for two incorrect guesses.
+        userInputs.add(" BB\n");
+        userInputs.add(" WB\n");
+        userInputs.add(" BW\n");
+        // Computer Turn - Round 1
+        // We provide input for two incorrect, one correct guesses from the computer.
+        // Human secret code here is "WB"
+        userInputs.add("\n");
+        userInputs.add("1 0\n");
+        userInputs.add("0 2\n");
+        userInputs.add("2 0\n");
+
+        Mastermind.setInputs(userInputs);
+
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+
+        LinkedList<Integer> computerInputs = new LinkedList<Integer>();
+        // Computer Turn - Round 1
+        // Computer tries three times before guessing correctly.
+        computerInputs.add(3);  // WW
+        computerInputs.add(1);  // BW
+        computerInputs.add(2);  // WB
+
+        // The correct secret code is this.
+        String secretCode = "WW";
+        IRandomizer randomizer = new RandomizerStub(secretCode, computerInputs);
+        // Max retries is 3.
+        Mastermind game = new Mastermind(2, 2, 1, 3, randomizer);
+
+        // Call the method that we are testing, playRound().
+        game.playRound(1);
+
+        // What the round should look like to the user. 
+        String expected = "TOTAL POSSIBILITIES = 4\n" +
+                "\n" +
+                "\n" +
+                "COLOR     LETTER\n" +
+                "=====     ======\n" +
+                "BLACK        B\n" +
+                "WHITE        W\n" +
+                "\n" +
+                "\n" +
+                "ROUND NUMBER  1 ----\n" +
+                "\n" +
+                "GUESS MY COMBINATION. \n" +
+                "\n" +
+                "MOVE #1 GUESS ?YOU HAVE 0 BLACKS AND 0 WHITES.\n" +
+                "MOVE #2 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\n" +
+                "MOVE #3 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\n" +
+                "YOU RAN OUT OF MOVES!  THAT'S ALL YOU GET!\n" +
+                "THE ACTUAL COMBINATION WAS: WW\n" +
+                "NOW I GUESS.  THINK OF A COMBINATION.\n" +
+                "HIT RETURN WHEN READY:\n" +
+                "MY GUESS IS: WW  BLACKS, WHITES ? " +
+                "MY GUESS IS: BW  BLACKS, WHITES ? " +
+                "MY GUESS IS: WB  BLACKS, WHITES ? " +
+                "I GOT IT IN  3 MOVES!\n" +
+                "SCORE:\n" +
+                "\tCOMPUTER \t3\n" +
+                "\tHUMAN \t3\n" +
+                "\n";
+
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
+        // Assert the actual output matches the expected output.
+        assertEquals(expected, actual);
+    }
 
     // BARAN ONALAN
     // This test the humanTurn() unit with the scenario of a correct guess within
