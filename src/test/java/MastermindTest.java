@@ -473,6 +473,28 @@ class MastermindTest {
         assertEquals(numWhite, actual.whites());
     }
 
+    // Julie Mammen
+    // This tests generateSolutionID with parameterized testing.
+    // It utilizes the RandomizerStub in order to populate
+    // a linked list to ensure that solutionID is generated and correct.
+    @ParameterizedTest(name = "generateCorrectSolutionID: solutionId={0} => ")
+    @CsvSource({
+            "0",
+            "1",
+            "2",
+            "3",
+    })
+    void generateCorrectSolutionID(int expected)
+    {
+        LinkedList<Integer> ID = new LinkedList<>();
+        ID.add(expected);
+        // Create Mastermind with RandomizerStub to control the SolutionID generation
+        IRandomizer randomizer = new RandomizerStub(ID);
+        Mastermind game = new Mastermind(2, 2, 1, 2, randomizer);
+        // Asserts that the actual result is the same as expected.
+        assertEquals(expected, randomizer.generateSolutionID());
+    }
+    
     // Luoshan Zhang
     // This test solutionIdToColorCodeRight() using parameterized tests with
     // given valid id and check if the color code is decoded correctly
