@@ -27,14 +27,160 @@ class MastermindTest {
     }
 
     // BARAN ONALAN
+    // This tests both play() method and playRound() method since play() calls playRound()
+    // a specified number of times.
+    @Test
+    void playTest() {
+        // BARAN ONALAN
+        // THIS IS ONLY FOR THE LIVE DEMO IN CLASS!!!
+        // This will always be FALSE unless we demo for class, then it will be TRUE.
+        Mastermind.demoMode = false;
+
+        LinkedList<String> userInputs = new LinkedList<>();
+        // Human Turn - Round 1
+        // We provide user input for two incorrect guesses.
+        userInputs.add(" BB\n");
+        userInputs.add(" WB\n");
+        userInputs.add(" BW\n");
+        // Computer Turn - Round 1
+        // We provide user input for two incorrect and one correct guesses from the computer.
+        // Human secret code here is "WB"
+        userInputs.add("\n");
+        userInputs.add("1 0\n");
+        userInputs.add("0 2\n");
+        userInputs.add("2 0\n");
+        // Human Turn - Round 2
+        // We provide user input for one incorrect and one correct guesses.
+        userInputs.add(" BB\n");
+        userInputs.add(" WW\n");
+        // Computer Turn - Round 2
+        // We provide user input for two incorrect and one invalid and incorrect guess from the computer.
+        // Invalid Result
+        userInputs.add("\n");
+        userInputs.add("1 0\n");
+        userInputs.add("0 2\n");
+        userInputs.add("0 2\n");
+        // Valid Result
+        userInputs.add("\n");
+        userInputs.add("1 0\n");
+        userInputs.add("0 2\n");
+        userInputs.add("2 0\n");
+
+        Mastermind.setInputs(userInputs);
+
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+
+        LinkedList<Integer> computerInputs = new LinkedList<Integer>();
+        // Computer Turn - Round 1
+        // Computer tries three times before guessing correctly.
+        computerInputs.add(3);  // WW
+        computerInputs.add(1);  // BW
+        computerInputs.add(2);  // WB
+        // Computer Turn - Round 2
+        // Computer tries three times before human gives invalid input.
+        // Then computer tries three times before guessing correctly.
+        // Invalid human input
+        computerInputs.add(3);  // WW
+        computerInputs.add(1);  // BW
+        computerInputs.add(2);  // WB
+        // Valid human input
+        computerInputs.add(3);  // WW
+        computerInputs.add(1);  // BW
+        computerInputs.add(2);  // WB
+
+        // The correct secret code is this.
+        String secretCode = "WW";
+        IRandomizer randomizer = new RandomizerStub(secretCode, computerInputs);
+        // Max retries is 2.
+        Mastermind game = new Mastermind(2, 2, 2, 3, randomizer);
+
+        // Call the method that we are testing.
+        game.play();
+
+        // The expected output should contain lines for all incorrect guesses
+        // and that we ran out of moves.
+        String expected = "TOTAL POSSIBILITIES = 4\n" +
+                "\n" +
+                "\n" +
+                "COLOR     LETTER\n" +
+                "=====     ======\n" +
+                "BLACK        B\n" +
+                "WHITE        W\n" +
+                "\n" +
+                "\n" +
+                "ROUND NUMBER  1 ----\n" +
+                "\n" +
+                "GUESS MY COMBINATION. \n" +
+                "\n" +
+                "MOVE #1 GUESS ?YOU HAVE 0 BLACKS AND 0 WHITES.\n" +
+                "MOVE #2 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\n" +
+                "MOVE #3 GUESS ?YOU HAVE 1 BLACKS AND 0 WHITES.\n" +
+                "YOU RAN OUT OF MOVES!  THAT'S ALL YOU GET!\n" +
+                "THE ACTUAL COMBINATION WAS: WW\n" +
+                "NOW I GUESS.  THINK OF A COMBINATION.\n" +
+                "HIT RETURN WHEN READY:\n" +
+                "MY GUESS IS: WW  BLACKS, WHITES ? " +
+                "MY GUESS IS: BW  BLACKS, WHITES ? " +
+                "MY GUESS IS: WB  BLACKS, WHITES ? " +
+                "I GOT IT IN  3 MOVES!\n" +
+                "SCORE:\n" +
+                "\tCOMPUTER \t3\n" +
+                "\tHUMAN \t3\n" +
+                "\n" +
+                "ROUND NUMBER  2 ----\n" +
+                "\n" +
+                "GUESS MY COMBINATION. \n" +
+                "\n" +
+                "MOVE #1 GUESS ?YOU HAVE 0 BLACKS AND 0 WHITES.\n" +
+                "MOVE #2 GUESS ?YOU GUESSED IT IN 2 MOVES!\n" +
+                "SCORE:\n" +
+                "\tCOMPUTER \t3\n" +
+                "\tHUMAN \t5\n" +
+                "\n" +
+                "NOW I GUESS.  THINK OF A COMBINATION.\n" +
+                "HIT RETURN WHEN READY:\n" +
+                "MY GUESS IS: WW  BLACKS, WHITES ? " +
+                "MY GUESS IS: BW  BLACKS, WHITES ? " +
+                "MY GUESS IS: WB  BLACKS, WHITES ? " +
+                "YOU HAVE GIVEN ME INCONSISTENT INFORMATION.\n" +
+                "TRY AGAIN, AND THIS TIME PLEASE BE MORE CAREFUL.\n" +
+                "NOW I GUESS.  THINK OF A COMBINATION.\n" +
+                "HIT RETURN WHEN READY:\n" +
+                "MY GUESS IS: WW  BLACKS, WHITES ? " +
+                "MY GUESS IS: BW  BLACKS, WHITES ? " +
+                "MY GUESS IS: WB  BLACKS, WHITES ? " +
+                "I GOT IT IN  3 MOVES!\n" +
+                "SCORE:\n" +
+                "\tCOMPUTER \t6\n" +
+                "\tHUMAN \t5\n" +
+                "\n" +
+                "GAME OVER\n" +
+                "FINAL SCORE: \n" +
+                "SCORE:\n" +
+                "\tCOMPUTER \t6\n" +
+                "\tHUMAN \t5\n" +
+                "\n";
+        // Assert that the actual output is the same as expected.
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
+        assertEquals(expected, actual);
+    }
+
+    // BARAN ONALAN
     // This test the humanTurn() unit with the scenario of a correct guess within
     // max retries.
     @Test
     void humanTurnTestGuessRight() {
+        // BARAN ONALAN
+        // THIS IS ONLY FOR THE LIVE DEMO IN CLASS!!!
+        // This will always be FALSE unless we demo for class, then it will be TRUE.
+        Mastermind.demoMode = false;
+
         // We provide user input for one incorrect and one correct guesses.
         LinkedList<String> guesses = new LinkedList<>();
-        guesses.add("BBBB");
-        guesses.add("GRBW");
+        guesses.add(" BBBB\n");
+        guesses.add(" GRBW\n");
         Mastermind.setInputs(guesses);
 
         // Redirect the output so we can compare it against the expected.
@@ -80,10 +226,15 @@ class MastermindTest {
     // max retries.
     @Test
     void humanTurnTestGuessWrong() {
+        // BARAN ONALAN
+        // THIS IS ONLY FOR THE LIVE DEMO IN CLASS!!!
+        // This will always be FALSE unless we demo for class, then it will be TRUE.
+        Mastermind.demoMode = false;
+
         // We provide user input for two incorrect guesses.
         LinkedList<String> guesses = new LinkedList<>();
-        guesses.add("BBBB");
-        guesses.add("GGGG");
+        guesses.add(" BBBB\n");
+        guesses.add(" GGGG\n");
         Mastermind.setInputs(guesses);
 
         // Redirect the output so we can compare it against the expected.
@@ -127,6 +278,11 @@ class MastermindTest {
     // This test the computerTurn() unit with the scenario of all human input being valid.
     @Test
     void computerTurnTestValidHumanInput() {
+        // BARAN ONALAN
+        // THIS IS ONLY FOR THE LIVE DEMO IN CLASS!!!
+        // This will always be FALSE unless we demo for class, then it will be TRUE.
+        Mastermind.demoMode = false;
+
         // We provide user input for two incorrect and one correct guesses from the computer.
         // Human secret code here is "WB"
         LinkedList<String> userInputs = new LinkedList<>();
@@ -140,7 +296,7 @@ class MastermindTest {
         ByteArrayOutputStream outContent = new ByteArrayOutputStream();
         Mastermind.setOut(new PrintStream(outContent));
 
-        // The correct secret code is this.
+        // Computer tries three times before guessing correctly.
         LinkedList<Integer> computerInputs = new LinkedList<Integer>();
         computerInputs.add(3);  // WW
         computerInputs.add(1);  // BW
@@ -161,6 +317,80 @@ class MastermindTest {
                 "WHITE        W\n" +
                 "\n" +
                 "\n" +
+                "NOW I GUESS.  THINK OF A COMBINATION.\n" +
+                "HIT RETURN WHEN READY:\n" +
+                "MY GUESS IS: WW  BLACKS, WHITES ? " +
+                "MY GUESS IS: BW  BLACKS, WHITES ? " +
+                "MY GUESS IS: WB  BLACKS, WHITES ? " +
+                "I GOT IT IN  3 MOVES!\n";
+
+        // Assert that the actual output is the same as expected.
+        String actual = outContent.toString().replaceAll("\\r\\n?", "\n");
+        assertEquals(expected, actual);
+    }
+
+    // BARAN ONALAN
+    // This test the computerTurn() unit with the scenario of all human input being invalid.
+    @Test
+    void computerTurnTestInvalidHumanInput() {
+        // BARAN ONALAN
+        // THIS IS ONLY FOR THE LIVE DEMO IN CLASS!!!
+        // This will always be FALSE unless we demo for class, then it will be TRUE.
+        Mastermind.demoMode = false;
+
+        // We provide user input for two incorrect and one invalid and incorrect guess from the computer.
+        // Human secret code here is "WB"
+        LinkedList<String> userInputs = new LinkedList<>();
+        // Invalid
+        userInputs.add("\n");
+        userInputs.add("1 0\n");
+        userInputs.add("0 2\n");
+        userInputs.add("0 2\n");
+        // Valid
+        userInputs.add("\n");
+        userInputs.add("1 0\n");
+        userInputs.add("0 2\n");
+        userInputs.add("2 0\n");
+        Mastermind.setInputs(userInputs);
+
+        // Redirect the output so we can compare it against the expected.
+        ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        Mastermind.setOut(new PrintStream(outContent));
+
+        // Computer tries three times before human gives invalid input.
+        // Then computer tries three times before guessing correctly.
+        LinkedList<Integer> computerInputs = new LinkedList<Integer>();
+        // Invalid
+        computerInputs.add(3);  // WW
+        computerInputs.add(1);  // BW
+        computerInputs.add(2);  // WB
+        // Valid
+        computerInputs.add(3);  // WW
+        computerInputs.add(1);  // BW
+        computerInputs.add(2);  // WB
+        IRandomizer randomizer = new RandomizerStub(computerInputs);
+        // Max retries is 10.
+        Mastermind game = new Mastermind(2, 2, 1, 3, randomizer);
+
+        // Call the method that we are testing.
+        game.computerTurn();
+
+        String expected = "TOTAL POSSIBILITIES = 4\n" +
+                "\n" +
+                "\n" +
+                "COLOR     LETTER\n" +
+                "=====     ======\n" +
+                "BLACK        B\n" +
+                "WHITE        W\n" +
+                "\n" +
+                "\n" +
+                "NOW I GUESS.  THINK OF A COMBINATION.\n" +
+                "HIT RETURN WHEN READY:\n" +
+                "MY GUESS IS: WW  BLACKS, WHITES ? " +
+                "MY GUESS IS: BW  BLACKS, WHITES ? " +
+                "MY GUESS IS: WB  BLACKS, WHITES ? " +
+                "YOU HAVE GIVEN ME INCONSISTENT INFORMATION.\n" +
+                "TRY AGAIN, AND THIS TIME PLEASE BE MORE CAREFUL.\n" +
                 "NOW I GUESS.  THINK OF A COMBINATION.\n" +
                 "HIT RETURN WHEN READY:\n" +
                 "MY GUESS IS: WW  BLACKS, WHITES ? " +

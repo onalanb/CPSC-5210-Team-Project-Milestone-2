@@ -45,6 +45,8 @@ public class Mastermind {
     // static method getInput(), we need to have a way of feeding a sequence
     // of inputs that will replace the human provided inputs during unit testing.
     private static Queue<String> inputs = null;
+    static boolean demoMode;
+
     // BARAN ONALAN
     // Our unit tests will use this setter to set the inputs variable above.
     static void setInputs(Queue<String> testInputs) {
@@ -63,9 +65,33 @@ public class Mastermind {
     // We use out instead of System.out in these printing methods because that
     // is what we are mocking/stubbing using the methods and variables above.
     // some less verbose printing methods
-    static private void pf(String s, Object... o) { out.printf(s, o);}
-    static private void pl(String s) { out.println(s);}
-    static private void pl() { out.println();}
+    static private void pf(String s, Object... o) {
+        out.printf(s, o);
+        // BARAN ONALAN
+        // In order to demo we need to print to console.
+        if (demoMode) {
+            try { Thread.sleep(250); } catch(Exception ignored) {}
+            System.out.printf(s, o);
+        }
+    }
+    static private void pl(String s) {
+        out.println(s);
+        // BARAN ONALAN
+        // In order to demo we need to print to console.
+        if (demoMode) {
+            try { Thread.sleep(250); } catch(Exception ignored) {}
+            System.out.println(s);
+        }
+    }
+    static private void pl() {
+        out.println();
+        // BARAN ONALAN
+        // In order to demo we need to print to console.
+        if (demoMode) {
+            try { Thread.sleep(250); } catch(Exception ignored) {}
+            System.out.println();
+        }
+    }
 
     public static void main(String[] args) {
         title();
@@ -83,7 +109,7 @@ public class Mastermind {
     record Guess(int guessNum, String guess, int blacks, int whites){}
 
 
-    private void play() {
+    void play() {
         IntStream.rangeClosed(1,rounds).forEach(this::playRound);
         pl("GAME OVER");
         pl("FINAL SCORE: ");
@@ -176,7 +202,7 @@ public class Mastermind {
         displayColorCodes(numOfColors);
     }
 
-    private void playRound(int round) {
+    void playRound(int round) {
         pf("ROUND NUMBER % d ----%n%n",round);
         humanTurn();
         computerTurn();
@@ -430,6 +456,12 @@ public class Mastermind {
             scanner = new Scanner(System.in);
         } else {
             String input = inputs.remove();
+            // BARAN ONALAN
+            // In order to demo we need to print to console.
+            if (demoMode) {
+                try { Thread.sleep(250); } catch(Exception ignored) {}
+                System.out.printf(input);
+            }
             InputStream inStream = new ByteArrayInputStream(input.getBytes());
             scanner = new Scanner(inStream);
         }

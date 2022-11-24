@@ -14,6 +14,12 @@ public class RandomizerStub implements IRandomizer {
     private String colorCode;
     private Queue<Integer> solutionIDs;
 
+    // This constructor gets used when testing multiple rounds and UI automation.
+    public RandomizerStub(String colorCode, Queue<Integer> solutionIDs) {
+        this.colorCode = colorCode;
+        this.solutionIDs = solutionIDs;
+    }
+
     // This constructor gets used when testing the human turn.
     public RandomizerStub(String colorCode) {
         this.colorCode = colorCode;
