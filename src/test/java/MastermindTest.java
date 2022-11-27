@@ -175,6 +175,8 @@ class MastermindTest {
     @Test
     void playRoundTest()
     {
+        // THIS IS ONLY FOR THE LIVE DEMO IN CLASS!!!
+        // This will always be FALSE unless we demo for class, then it will be TRUE.
         Mastermind.demoMode = false;
 
         LinkedList<String> userInputs = new LinkedList<>();
